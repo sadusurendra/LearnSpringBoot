@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 
 @Service
@@ -48,6 +49,15 @@ public class JwtServiceImpl implements JwtService {
 
 	@Override
 	public String generateToken(Map<String, Object> claims, UserDetails userDetails) {
+//		return Jwts.builder()
+//                .setClaims(claims)
+//                .setSubject(userDetails.getUsername())
+//                .setIssuedAt(new Date(System.currentTimeMillis()))
+//                .setExpiration(new Date(System.currentTimeMillis() + JWT_EXPIRATION))
+//                .signWith(getSigningKey(), SignatureAlgorithm.HS256)
+//                .compact();
+		
+		// Used below code as some of the functions are deprecated 
 		return Jwts.builder().claims(claims).subject(userDetails.getUsername())
 				.issuedAt(new Date(System.currentTimeMillis()))
 				.expiration(new Date(System.currentTimeMillis() + JWT_EXPIRATION)).signWith(getSigningKey(), Jwts.SIG.HS256)
