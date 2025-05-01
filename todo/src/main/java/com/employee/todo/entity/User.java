@@ -55,7 +55,8 @@ public class User implements UserDetails {
 	@CollectionTable(name = "user_authorities", joinColumns = @JoinColumn(name = "user_id"))
 	private List<Authority> authorities;
 
-	@OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, orphanRemoval = true)
+	@OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, 
+			orphanRemoval = true, fetch = FetchType.EAGER)
 	private List<Todo> todos;
 
 	public User() {
@@ -134,6 +135,13 @@ public class User implements UserDetails {
 
 	public void setPassword(String password) {
 		this.password = password;
+	}
+
+	@Override
+	public String toString() {
+		return "User [id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", email=" + email
+				+ ", password=" + password + ", createdAt=" + createdAt + ", updatedAt=" + updatedAt + ", authorities="
+				+ authorities + ", todos=" + todos + "]";
 	}
 
 }

@@ -1,18 +1,22 @@
 package com.employee.todo.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.employee.todo.entity.Authority;
 import com.employee.todo.entity.User;
 import com.employee.todo.repository.UserRepository;
+import com.employee.todo.request.AuthenticationRequest;
 import com.employee.todo.request.RegisterRequest;
-
-import jakarta.transaction.Transactional;
+import com.employee.todo.response.AuthenticationResponse;
 
 @Service
 public class AuthenticationServiceImpl implements AuthenticationService {
@@ -22,6 +26,12 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
 	@Autowired
 	private PasswordEncoder passwordEncoder;
+
+	@Autowired
+	private AuthenticationManager authenticationManager;
+
+	@Autowired
+	private JwtService jwtService;
 
 	@Override
 	@Transactional
@@ -52,6 +62,21 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 			authorities.add(new Authority("ROLE_ADMIN"));
 		}
 		return authorities;
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public AuthenticationResponse login(AuthenticationRequest authenticationRequest) {
+
+		authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authenticationRequest.getEmail(),
+				authenticationRequest.getPassword()));
+
+		User user = userRepository.findByEmail(authenticationRequest.getEmail())
+				.orElseThrow(() -> new IllegalArgumentException("Invalid Email or Password"));
+
+		String jwtToken = jwtService.generateToken(new HashMap<>(), user);
+
+		return new AuthenticationResponse(jwtToken);
 	}
 
 }
