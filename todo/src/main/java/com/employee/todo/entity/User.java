@@ -55,8 +55,7 @@ public class User implements UserDetails {
 	@CollectionTable(name = "user_authorities", joinColumns = @JoinColumn(name = "user_id"))
 	private List<Authority> authorities;
 
-	@OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, 
-			orphanRemoval = true, fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
 	private List<Todo> todos;
 
 	public User() {
