@@ -136,11 +136,4 @@ public class User implements UserDetails {
 		this.password = password;
 	}
 
-	@Override
-	public String toString() {
-		return "User [id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", email=" + email
-				+ ", password=" + password + ", createdAt=" + createdAt + ", updatedAt=" + updatedAt + ", authorities="
-				+ authorities + ", todos=" + todos + "]";
-	}
-
 }
